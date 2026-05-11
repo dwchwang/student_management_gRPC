@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package student;
+option go_package = "student_management_gRPC/pb;pb";
+
+
+// message
+message Student {
+  string id = 1;
+  string name = 2;
+  uint32 age = 3;
+  string class = 4;
+}
+
+message CreateStudentRequest {
+  string name  = 1;
+  string email = 2;
+  uint32  age   = 3;
+  string class = 4;
+}
+
+message CreateStudentResponse {
+  string id = 1;
+  string name = 2;
+  uint32 age = 3;
+  string class = 4;
+}
+
+message GetStudentRequest {
+  string id = 1;
+}
+
+message ListStudentsRequest {
+  int32 limit = 1;
+}
+
+message Score {
+  string subject = 1;
+  float score = 2;
+}
+
+message UploadScoresRequest {
+  string student_id = 1;
+  Score score = 2;
+}
+
+message UploadScoresResponse {
+  string student_id = 1;
+  int32 total_subject = 2;
+  float average_score = 3;
+}
+
+message ExamMessage {
+  string sender = 1;
+  string message = 2;
+}
+
+// service
+service StudentService {
+  // Unary
+  rpc CreateStudent (CreateStudentRequest)  returns (CreateStudentResponse);
+  rpc GetStudent (GetStudentRequest) returns (CreateStudentResponse);
+
+  // Server Streaming
+  rpc ListStudents (ListStudentsRequest) returns (stream CreateStudentResponse);
+
+  // Client Streaming
+  rpc UploadScores (stream UploadScoresRequest) returns (UploadScoresResponse);
+
+  // Bidi Streaming
+  rpc ExamSession (stream ExamMessage) returns (stream ExamMessage);
+}
